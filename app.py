@@ -15,12 +15,6 @@ tasks = [
     'title': u'Learn Python',
     'description': u'Need to find a good Python tutorial on the web', 
     'done': False
-  },
-  {
-    'id': 2,
-    'title': u'Learn Python 2',
-    'description': u'Need to find a good Python tutorial on the web', 
-    'done': False
   }
 ]
 
@@ -35,16 +29,19 @@ def get_tasks():
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
 
-  # task = [task for task in tasks if task['id'] == task_id]
-  for taskA in tasks:
-    print('task', taskA)
-
   task = []
-  task.append(tasks[0])
+
+  # task = [task for task in tasks if task['id'] == task_id]
+  # Instead of filter, find:
+  for _task in tasks:
+    print('_task', _task)
+    if _task['id'] == task_id:
+      task.append(_task)
+      break
 
   if len(task) == 0:
     abort(404)
-  return jsonify({'task': task[0]})
+  return jsonify({'task': task})
 
 if __name__ == '__main__':
   app.run(debug=True)
