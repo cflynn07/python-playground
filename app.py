@@ -31,17 +31,12 @@ def get_tasks():
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-
-  task = []
-
   # task = [task for task in tasks if task['id'] == task_id]
   # Instead of filter, find:
-
   try:
     task = next(task for task in tasks if task['id'] == task_id)
   except StopIteration:
     abort(404)
-
   return jsonify({'task': task})
 
 if __name__ == '__main__':
