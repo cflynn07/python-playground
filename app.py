@@ -33,14 +33,12 @@ def get_task(task_id):
 
   # task = [task for task in tasks if task['id'] == task_id]
   # Instead of filter, find:
-  for _task in tasks:
-    print('_task', _task)
-    if _task['id'] == task_id:
-      task.append(_task)
-      break
 
-  if len(task) == 0:
+  try:
+    task = next(task for task in tasks if task['id'] == task_id)
+  except StopIteration:
     abort(404)
+
   return jsonify({'task': task})
 
 if __name__ == '__main__':
