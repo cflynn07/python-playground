@@ -4,6 +4,9 @@ from flask import abort
 from flask import jsonify
 from flask import make_response
 from flask import request
+from flask import url_for
+
+import helper
 
 app = Flask(__name__)
 
@@ -24,6 +27,7 @@ tasks = [
 
 @app.route('/')
 def index():
+  helper.foo()
   return "Hello, World!"
 
 @app.route('/todo/api/v1.0/tasks', methods=['GET'])
@@ -56,6 +60,15 @@ def create_task():
   }
   tasks.append(task)
   return jsonify({'task': task}), 201
+
+def make_public_task(task):
+  new_task = {}
+  for field in task:
+    if field == 'id':
+      new_task['uri'] = url_for('get_task', task_id=task['id'], _external=True)
+    else:
+      new_task[field] = task[field]
+  return new_task
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
