@@ -4,9 +4,8 @@ from flask import abort
 from flask import jsonify
 from flask import make_response
 from flask import request
-from flask import url_for
 
-import helper
+from helper import make_public_task
 
 app = Flask(__name__)
 
@@ -27,12 +26,11 @@ tasks = [
 
 @app.route('/')
 def index():
-  helper.foo()
   return "Hello, World!"
 
 @app.route('/todo/api/v1.0/tasks', methods=['GET'])
 def get_tasks():
-  return jsonify({'tasks': tasks})
+  return jsonify({'tasks': [make_public_task(task) for task in tasks]})
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
@@ -42,7 +40,7 @@ def get_task(task_id):
     task = next(task for task in tasks if task['id'] == task_id)
   except StopIteration:
     abort(404)
-  return jsonify({'task': task})
+  return jsonify({'task': make_public_task(task)})
 
 @app.errorhandler(404)
 def not_found(error):
@@ -60,15 +58,6 @@ def create_task():
   }
   tasks.append(task)
   return jsonify({'task': task}), 201
-
-def make_public_task(task):
-  new_task = {}
-  for field in task:
-    if field == 'id':
-      new_task['uri'] = url_for('get_task', task_id=task['id'], _external=True)
-    else:
-      new_task[field] = task[field]
-  return new_task
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
