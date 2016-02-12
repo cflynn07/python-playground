@@ -10,5 +10,6 @@ Building and running code with docker, locally on OSX using docker-machine
 # from python-api/ project directory
 $ eval "$(docker-machine env default)" #assumes VM already set up and running
 $ docker build -t 'python-api' .
+$ docker run -p 5000:5000 python-api
 $ curl http://`docker-machine ip default`:5000 -v # Hello, World!
 ```
