@@ -13,3 +13,9 @@ $ docker build -t 'python-api' .
 $ docker run -p 5000:5000 python-api
 $ curl http://`docker-machine ip default`:5000 -v # Hello, World!
 ```
+
+Tests
+-----
+```bash
+$ python -m unittest discover -p *_test.py
+```
